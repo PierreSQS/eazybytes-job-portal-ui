@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FooterPolicyLink } from "./FooterPolicyLink";
 
 const Footer = () => {
   return (
@@ -141,34 +142,19 @@ const Footer = () => {
 
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex flex-wrap justify-center md:justify-start gap-6 text-sm text-gray-400 mb-6 md:mb-0">
-              <a className="group relative hover:text-white transition-colors duration-300">
-                <span className="relative z-10">Privacy Policy</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-primary-600/20 to-purple-600/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -inset-2"></div>
-              </a>
-              <a className="group relative hover:text-white transition-colors duration-300 cursor-help">
-                <span className="relative z-10">Terms of Service</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-primary-600/20 to-purple-600/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -inset-2"></div>
-                <span
-                  role="tooltip"
-                  className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-56 rounded-lg bg-gray-800/95 backdrop-blur px-3 py-2 text-xs text-gray-200 shadow-xl ring-1 ring-white/10 opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 z-20"
-                >
-                  Review the terms and conditions that govern your use of
-                  JobPortal.
-                  <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800/95"></span>
-                </span>
-              </a>
-              <a className="group relative hover:text-white transition-colors duration-300 cursor-help">
-                <span className="relative z-10">Cookie Policy</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-primary-600/20 to-purple-600/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -inset-2"></div>
-                <span
-                  role="tooltip"
-                  className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-56 rounded-lg bg-gray-800/95 backdrop-blur px-3 py-2 text-xs text-gray-200 shadow-xl ring-1 ring-white/10 opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 z-20"
-                >
-                  Learn how we use cookies to improve your browsing experience on
-                  JobPortal.
-                  <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800/95"></span>
-                </span>
-              </a>
+              <FooterPolicyLink
+                label="Privacy Policy"
+                description="Read how we collect, use, and protect your personal data on JobPortal."
+                align="left"
+              />
+              <FooterPolicyLink
+                label="Terms of Service"
+                description="Review the terms and conditions that govern your use of JobPortal."
+              />
+              <FooterPolicyLink
+                label="Cookie Policy"
+                description="Learn how we use cookies to improve your browsing experience on JobPortal."
+              />
               <Link
                 to="/contact"
                 className="group relative hover:text-white transition-colors duration-300"
