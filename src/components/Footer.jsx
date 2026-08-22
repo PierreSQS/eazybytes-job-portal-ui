@@ -149,7 +149,7 @@ const Footer = () => {
               />
               <FooterPolicyLink
                 label="Terms of Service"
-                description="Review the terms and conditions for using JobPortal's services."
+                description="Review the terms and conditions that govern your use of JobPortal."
               />
               <FooterPolicyLink
                 label="Cookie Policy"
