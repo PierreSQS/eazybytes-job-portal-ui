@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { Link } from "react-router-dom";
 
 // Maps a tooltip alignment to its position classes and matching arrow offset.
 // Edge-anchored variants (left/right) keep the tooltip from clipping past the
@@ -9,13 +10,15 @@ const ALIGN = {
   right: { tooltip: "right-0", arrow: "right-6 translate-x-1/2" },
 };
 
-const FooterPolicyLink = ({ label, description, align = "center" }) => {
+const FooterPolicyLink = ({ label, description, align = "center", to }) => {
   const tooltipId = useId();
   const { tooltip, arrow } = ALIGN[align] ?? ALIGN.center;
+  const Component = to ? Link : "a";
+  const linkProps = to ? { to } : { tabIndex: 0 };
 
   return (
-    <a
-      tabIndex={0}
+    <Component
+      {...linkProps}
       aria-describedby={tooltipId}
       className="group relative hover:text-white focus:text-white focus:outline-none transition-colors duration-300 cursor-help"
     >
@@ -31,7 +34,7 @@ const FooterPolicyLink = ({ label, description, align = "center" }) => {
           className={`absolute top-full ${arrow} border-4 border-transparent border-t-gray-800/95`}
         ></span>
       </span>
-    </a>
+    </Component>
   );
 };
 
