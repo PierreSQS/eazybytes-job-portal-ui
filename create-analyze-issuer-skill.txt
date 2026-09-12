@@ -1,0 +1,5 @@
+mkdir -p .claude/skills/analyze-issue
+cat > .claude/skills/analyze-issue/SKILL.md <<'EOF'
+# Skill: analyze-issue
+...
+EOF
