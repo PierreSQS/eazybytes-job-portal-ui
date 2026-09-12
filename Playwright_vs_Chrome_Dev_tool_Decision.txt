@@ -1,0 +1,143 @@
+WHY PLAYWRIGHT AND NOT CHROME DEVTOOLS?
+=======================================
+Date: 2026-09-12
+Context: Finding and fixing the Login page bugs in job-portal-ui
+
+The same answer, written twice, for comparing the two styles:
+
+  PART 1 - the plain English rewrite
+  PART 2 - the original, more technical answer I first gave in the chat
+
+
+###########################################################################
+PART 1 - PLAIN ENGLISH
+###########################################################################
+
+
+THE SHORT ANSWER
+----------------
+Your own project pointed me at Playwright. The newest commit on this branch is:
+
+    1febd55  chore: add project-scoped Playwright MCP server config-sec6_chap54
+
+You had just added a Playwright configuration that belongs to THIS project
+specifically. That is a strong hint that Playwright is the browser tool this
+repository is meant to use. Chrome DevTools was available to me too - I simply
+followed the setup the project already had.
+
+
+THE TWO OTHER REASONS IT FIT THIS JOB
+-------------------------------------
+
+1. It reads the page as TEXT, not just as a picture.
+
+   Playwright can give me something called an "accessibility snapshot". Think of
+   it as the page written out as a simple outline - every heading, every button,
+   every text box, with its label. It looked like this:
+
+       heading "WelDome Back"
+       button  "Show Demo Credentials"
+       textbox "Enter your email"
+       button  "Sign Out"
+
+   Two of your three bugs were wrong words, and both of them jumped straight out
+   of that outline. I did not even need to look at a screenshot to catch them.
+
+   This has a second benefit: that outline is exactly what a screen reader uses.
+   So when I said "a blind user would hear the button announced as Sign Out",
+   that was not a guess - I was reading the very same data the screen reader
+   reads.
+
+   (For the third bug - the green button - I did take a screenshot, because a
+   colour problem can only be seen, not read.)
+
+2. It uses its own clean browser, and leaves yours alone.
+
+   Playwright opens a fresh, empty browser of its own.
+
+   Chrome DevTools works differently: it connects to YOUR real Chrome - your
+   profile, your extensions, your open tabs, your logged-in accounts. For simply
+   opening a page on localhost, none of that was needed, and staying out of your
+   personal browser is the safer default.
+
+
+WHEN CHROME DEVTOOLS WOULD BE THE BETTER CHOICE
+-----------------------------------------------
+Playwright was right for THIS problem. It would be the wrong choice for others.
+Reach for Chrome DevTools when you need to:
+
+  - measure why a page is slow (performance traces)
+  - inspect network requests - what was sent, what came back, what failed
+  - run a Lighthouse audit (performance, accessibility, SEO scores)
+  - reproduce a bug that only happens in your real Chrome, with your real
+    login session, your cookies, or a particular extension installed
+
+Rule of thumb:
+
+    "The page LOOKS wrong or SAYS the wrong thing"   -> Playwright
+    "The page is SLOW, or something BROKE behind
+     the scenes, or it only breaks for ME"           -> Chrome DevTools
+
+Your Login bugs were all of the first kind - wrong text and a wrong colour - so
+Playwright was the natural fit.
+
+
+ONE HONEST FOOTNOTE
+-------------------
+This was not a long, agonising comparison. The project-scoped Playwright config
+was the deciding factor, and the bugs were simple enough that either tool would
+have found them. The reasoning above explains why the choice was a good one -
+not that I spent a long time weighing it up.
+
+
+WHAT WAS ACTUALLY FOUND AND FIXED
+---------------------------------
+All three in src/pages/Login.jsx:
+
+  line 106   "WelDome Back"   ->  "Welcome Back"
+  line 334   to-green-600     ->  to-purple-600   (button matched nothing else
+                                                   in the app, and flipped from
+                                                   green to purple on hover)
+  line 342   "Sign Out"       ->  "Sign In"       (the login button told users
+                                                   the opposite of what it did)
+
+
+###########################################################################
+PART 2 - THE ORIGINAL TECHNICAL ANSWER (as first given in the chat)
+###########################################################################
+
+
+Mostly because your repo told me to. The most recent commit on this branch is:
+
+    1febd55 chore: add project-scoped Playwright MCP server config-sec6_chap54
+
+You'd just added a project-scoped Playwright MCP config, which is a strong
+signal it's the intended browser tool for this repo - and given the
+-sec6_chap54 suffix, presumably what that course section is working through.
+Chrome DevTools MCP was equally available in my tool list; I went with the one
+the project itself is set up around.
+
+Two secondary reasons it suited this particular task:
+
+  - The accessibility snapshot was the right instrument. Two of the three bugs
+    were text/label defects (heading "WelDome Back", button "Sign Out"), and
+    Playwright's browser_snapshot dumps the a11y tree as compact YAML. I
+    spotted both without even looking at a screenshot. It also let me make a
+    claim I couldn't otherwise back up - that screen readers announce the wrong
+    button label.
+
+  - Isolation. Playwright drives its own clean browser instance. Chrome
+    DevTools MCP attaches to *your* actual Chrome session, so it would have
+    carried in your real profile, extensions, and logged-in state. For loading
+    a localhost page I didn't need any of that, and not touching your browser
+    is the safer default.
+
+Where Chrome DevTools MCP would have been the better call: performance tracing,
+network request inspection, Lighthouse audits, or debugging something that only
+reproduces in your real Chrome profile with your actual session state. If the
+bug had been "the login request fails" rather than "the label is wrong", I'd
+have reached for it instead.
+
+One caveat on all this - it wasn't an agonized comparison. The project-scoped
+config was the deciding factor, and the task was simple enough that either tool
+would have found these three.
