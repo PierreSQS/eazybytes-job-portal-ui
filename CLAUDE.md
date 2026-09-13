@@ -9,6 +9,48 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run lint` — ESLint (flat config, JS/JSX only)
 - `npm run preview` — Preview production build
 
+## MCP Servers
+
+Project-scoped MCP servers are declared in `.mcp.json` (committed, shared with everyone who clones the repo):
+
+| Server | Browser | Purpose |
+|---|---|---|
+| `playwright` | Chrome (default) | Default browser tool: accessibility snapshots, screenshots, form filling |
+| `playwright-firefox` | Firefox (`--browser firefox`) | Cross-browser checks; kept mainly for documentation |
+
+Both start with every Claude Code session. Use `playwright` unless Firefox is explicitly requested.
+
+### Switching a server off without deleting it
+
+Keep the entry in `.mcp.json` (for documentation) and disable it per developer in `.claude/settings.local.json`. That file is personal and not committed (ignored via the global git ignore):
+
+```json
+{
+  "enabledMcpjsonServers": ["playwright"],
+  "disabledMcpjsonServers": ["playwright-firefox"]
+}
+```
+
+- Remove the server from `enabledMcpjsonServers` **and** add it to `disabledMcpjsonServers`, so the two lists never disagree
+- To switch it back on, move the name back into `enabledMcpjsonServers`
+- Alternative: toggle a server on/off in the `/mcp` dialog
+- Restart Claude Code (`/exit`, then `claude --continue`) for changes to take effect
+
+### Adding a new server
+
+1. Add the entry to `.mcp.json`
+2. Restart Claude Code — new servers are only detected at session start
+3. Approve the server when prompted, then confirm it shows as connected in `/mcp`
+
+Firefox needs Playwright's own Firefox build (a normal Firefox install won't work). Install it with the Playwright version that `@playwright/mcp` depends on:
+
+```bash
+npm view @playwright/mcp@latest dependencies      # shows the playwright version
+npx -y playwright@<that-version> install firefox
+```
+
+Playwright MCP writes snapshots, console logs and screenshots into `.playwright-mcp/` and the project root; delete them after use.
+
 ## Repository Structure
 
 ```
@@ -26,6 +68,7 @@ job-portal-ui/
 │   ├── App.jsx           # Root component — router + provider tree
 │   ├── main.jsx          # Entry point
 │   └── index.css         # Global styles (Tailwind imports)
+├── .mcp.json             # Project-scoped MCP servers (Playwright: Chrome + Firefox)
 ├── eslint.config.js      # ESLint flat config
 ├── vite.config.js        # Vite configuration
 └── index.html            # HTML entry point
