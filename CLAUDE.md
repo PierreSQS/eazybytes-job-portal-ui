@@ -13,12 +13,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Project-scoped MCP servers are declared in `.mcp.json` (committed, shared with everyone who clones the repo):
 
-| Server | Browser | Purpose |
+| Server | Type | Purpose |
 |---|---|---|
-| `playwright` | Chrome (default) | Default browser tool: accessibility snapshots, screenshots, form filling |
-| `playwright-firefox` | Firefox (`--browser firefox`) | Cross-browser checks; kept mainly for documentation |
+| `playwright` | stdio (`npx`), Chrome | Default browser tool: accessibility snapshots, screenshots, form filling |
+| `playwright-firefox` | stdio (`npx`), Firefox (`--browser firefox`) | Cross-browser checks; kept mainly for documentation |
+| `context7` | http (`https://mcp.context7.com/mcp`) | Up-to-date library docs (e.g. React Router v7, Tailwind 4) |
 
-Both start with every Claude Code session. Use `playwright` unless Firefox is explicitly requested.
+All three start with every Claude Code session.
+
+- Browser tasks: use `playwright` unless Firefox is explicitly requested
+- Library/API questions: look up the current docs with `context7` (resolve the library ID first, then query) and pick the version matching `package.json`, instead of relying on memory. Example: the React Router lazy-loading refactor used `/remix-run/react-router/react_router_7_8_2` for the installed 7.8.0
 
 ### Switching a server off without deleting it
 
@@ -26,7 +30,7 @@ Keep the entry in `.mcp.json` (for documentation) and disable it per developer i
 
 ```json
 {
-  "enabledMcpjsonServers": ["playwright"],
+  "enabledMcpjsonServers": ["playwright", "context7"],
   "disabledMcpjsonServers": ["playwright-firefox"]
 }
 ```
@@ -68,7 +72,7 @@ job-portal-ui/
 │   ├── App.jsx           # Root component — router + provider tree
 │   ├── main.jsx          # Entry point
 │   └── index.css         # Global styles (Tailwind imports)
-├── .mcp.json             # Project-scoped MCP servers (Playwright: Chrome + Firefox)
+├── .mcp.json             # Project-scoped MCP servers (Playwright Chrome + Firefox, Context7)
 ├── eslint.config.js      # ESLint flat config
 ├── vite.config.js        # Vite configuration
 └── index.html            # HTML entry point
