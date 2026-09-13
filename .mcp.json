@@ -7,6 +7,16 @@
         "@playwright/mcp@latest"
       ],
       "env": {}
+    },
+    "playwright-firefox": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest",
+        "--browser",
+        "firefox"
+      ],
+      "env": {}
     }
   }
 }
